@@ -1,0 +1,47 @@
+Commands to pass in Master for installing ansible
+$ sudo apt update 
+$ sudo apt install software-properties-common 
+$ sudo apt-add-repository --yes --update ppa:ansible/ansible 
+$ sudo apt install ansible 
+
+    1  cd .ssh
+    2  ssh-keygen
+    3  ls
+    4  cat id_rsa.pub --> After adding this key to Slave
+    5  ssh ubuntu@65.2.82.60
+    6  sudo vi /etc/ansible/hosts (
+                                      [hostsip] - this name can be any user defined
+                                       slave ansbile_ssh_host=65.2.82.60 ) - slave ip we need to add
+   7  ansible -m ping all
+   8  ansible -m ping hostsip (groupname)
+   9  ansible -m ping slave1 
+
+--------------------------------------------------------------------------------------------------
+Slave- Ansible  (public IP 65.2.82.60)
+cd .ssh
+Cat authorized_keys (Edit and paste the cat id_rsa.pub from Master)
+
+----------------------------------------------------------------------------------------------
+Sample Ansible play-book Create new Ansible-playbook
+Play.yaml
+
+
+---
+
+ - hosts: slave1
+   become: yes
+   name: play1
+   tasks:
+    - name: Installing Apache on Slave1
+      apt: name=apache2 state=latest
+
+ - hosts: slave2
+   become: yes
+   name: play2
+   tasks:
+    - name: Installing nginx on slave2
+      apt: name=nginx state=latest
+
+
+#!/bin/sh 
+echo 'Welcome to Ansible from slave2' > /var/www/html/2.html 
